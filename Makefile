@@ -10,7 +10,7 @@ run: build
 
 .PHONY: postgres-up
 postgres-up:
-	cd docker && docker compose up -d
+	cd docker && docker compose up -d --wait
 
 .PHONY: postgres-down
 postgres-down:
@@ -19,7 +19,7 @@ postgres-down:
 .PHONY: postgres-clean
 .IGNORE: postgres-clean
 postgres-clean: postgres-down
-	docker volume rm docker_arroyo_postgres_data
+	docker volume rm docker_arroyo_postgres_data && sleep 1
 
 .PHONY: install-refinery
 install-refinery:

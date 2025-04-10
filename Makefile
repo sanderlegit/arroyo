@@ -1,6 +1,9 @@
 .PHONY: build
-build: postgres-up migrations webui-build
+build: postgres-clean postgres-up migrations webui-build
 	cargo build --package arroyo
+
+test: postgres-clean postgres-up
+	cargo nextest run --no-fail-fast
 
 run: build
 	target/debug/arroyo cluster
@@ -12,6 +15,11 @@ postgres-up:
 .PHONY: postgres-down
 postgres-down:
 	cd docker && docker compose down
+
+.PHONY: postgres-clean
+.IGNORE: postgres-clean
+postgres-clean: postgres-down
+	docker volume rm docker_arroyo_postgres_data
 
 .PHONY: install-refinery
 install-refinery:

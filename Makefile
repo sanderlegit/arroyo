@@ -1,5 +1,5 @@
 .PHONY: build
-build: postgres-clean postgres-up migrations webui-build
+build: build-deps webui-build
 	cargo build --package arroyo
 
 test: postgres-clean postgres-up
@@ -8,9 +8,12 @@ test: postgres-clean postgres-up
 run: build
 	target/debug/arroyo cluster
 
+.PHONY: build-deps
+build-deps: postgres-clean postgres-up migrations
+
 .PHONY: postgres-up
-postgres-up:
-	cd docker && docker compose up -d --wait
+postgres-up: 
+	cd docker && docker compose up -d --wait --timeout 10
 
 .PHONY: postgres-down
 postgres-down:
